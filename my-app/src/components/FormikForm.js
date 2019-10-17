@@ -83,6 +83,7 @@ const FormikUserForm = withFormik({
             name: name || "",
             email: email || "",
             password: password || "",
+            tos: tos || false,
             age: age || "",
             role: role || "",
             notes: notes || ""
