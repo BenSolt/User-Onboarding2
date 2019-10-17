@@ -3,59 +3,90 @@ import axios from "axios";
 import { withFormik, Form, Field } from "formik";
 import * as Yup from "yup";
 
-const Form = ({values, touched, errors, status}) => {
+import Users from './Users';
+
+const UserForm = ({values, touched, errors, status}) => {
     const [users, setUsers] = useState([])
     useEffect(() => {
         status && setUsers(users => [...users, status])
     },[status])
 
-reutrn (
-<div className='form'>
-    <Form>
-        <Field 
+return (
+<div className='Formholder'>
+    <Form className='Form1'>
+        <Field className='Field'
         type="text" 
         name="name" 
         placeholder="enter name" />
+        {touched.name && errors.name && (
+         <p className='error'>{errors.name}</p>
+        )}
 
-        <Field 
+        <Field className='Field' 
         type="text" 
         name="email" 
         placeholder="enter Email" />
+        {touched.email && errors.email && (
+         <p className='error'>{errors.email}</p>
+         )}
 
-        <Field 
+        <Field className='Field'
         type="text" 
         name="password" 
         placeholder="enter Password" />
+        {touched.password && errors.password && (
+         <p className='error'>{errors.password}</p>
+         )}
 
-        <Field
+        <Field className='Chekbox'
             type="checkbox"
-            name="Terms of Service"
-            checked={values.vaccinations}
+            name="TOS"
+            checked={values.tos}
           />
 
-        <span className="checkmark" />
+        
 
-
-        <button type="submit">Submit!</button>
+        <button className='Field' type="submit">Submit!</button>
         
     </Form>
+    <Form className='Form2'>
 
-{users.map(user = (
-    <ul key={}>
-        <li>Name: {user.name}</li>
-        <li>Email: {user.email}</li>
-        <li>Password: {user.name}</li>
-    </ul>
-))}
+        <Field className='Field'
+        type="text" 
+        name="age" 
+        placeholder="enter age" />
+       
+       <Field className='Field'
+        type="text" 
+        name="role" 
+        placeholder="role" />
+
+       <Field className='Field'
+          component="textarea"
+          type="text"
+          name="notes"
+          placeholder="Notes"
+        />
+        
+
+
+    </Form>
+        <Users user1={users}/>
+    
+
 </div>
   );
 };
 const FormikUserForm = withFormik({
-    mapPropsToValues({name, email, password}) {
+    mapPropsToValues({name, email, password, age, role, notes}) {
         return {
             name: name || "",
             email: email || "",
             password: password || "",
+            age: age || "",
+            role: role || "",
+            notes: notes || ""
+
         };
     },
     validationSchema: Yup.object().shape({
@@ -64,9 +95,11 @@ const FormikUserForm = withFormik({
         password: Yup.string().required('Please Enter Password'),
     }),
     handleSubmit(values, {setStatus}) {
-        axios.post('', values)
+        axios.post('https://reqres.in/api/users', values)
         .then(res => {setStatus(res.data); })
         .catch(err => console.log(err.response));
     }
 
-})
+})(UserForm);
+export default FormikUserForm;
+console.log('higher order comp', FormikUserForm)
